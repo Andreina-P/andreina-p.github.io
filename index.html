@@ -1,65 +1,778 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curriculum</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FluentPath — Learn English</title>
+
+
+  <script src="https://t.contentsquare.net/uxa/0acecbe0b9c72.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ─────────────────────────────────── */
+    :root {
+      --bg: #f5f3ee;
+      --surface: #ffffff;
+      --ink: #1a1a1a;
+      --ink-2: #555;
+      --ink-3: #888;
+      --accent: #2d6a4f;
+      --accent-light: #d8f3dc;
+      --accent-hover: #1b4332;
+      --border: #e0ddd6;
+      --radius: 10px;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    /* ── RESET ───────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--ink); line-height: 1.6; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font-body); }
+    img { max-width: 100%; }
+
+    /* ── SCREENS ─────────────────────────────────── */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ── NAV ─────────────────────────────────────── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 32px; background: var(--surface);
+      border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--ink); }
+    .logo svg { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; font-size: 0.9rem; font-weight: 500; color: var(--ink-2); }
+    .nav-links span { cursor: pointer; transition: color .2s; }
+    .nav-links span:hover, .nav-links span.active-link { color: var(--accent); }
+    .btn-login { background: var(--ink); color: #fff; border: none; padding: 8px 20px; border-radius: var(--radius); font-size: 0.9rem; font-weight: 600; transition: background .2s; }
+    .btn-login:hover { background: var(--accent); }
+
+    /* ── BUTTONS ─────────────────────────────────── */
+    .btn-primary { background: var(--accent); color: #fff; border: none; padding: 14px 32px; border-radius: var(--radius); font-size: 1rem; font-weight: 600; transition: background .2s, transform .1s; }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-secondary { background: transparent; color: var(--ink); border: 2px solid var(--border); padding: 12px 28px; border-radius: var(--radius); font-size: 0.95rem; font-weight: 500; transition: border-color .2s; }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-ghost { background: none; border: none; color: var(--ink-3); font-size: 0.85rem; text-decoration: underline; }
+    .btn-ghost:hover { color: var(--ink); }
+
+    /* ═══════════════════════════════════════════════
+       SCREEN 1 — LANDING
+    ═══════════════════════════════════════════════ */
+    #landing .hero {
+      max-width: 780px; margin: 80px auto 60px; text-align: center; padding: 0 24px;
+    }
+    #landing .hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15; margin-bottom: 20px; }
+    #landing .hero p { font-size: 1.1rem; color: var(--ink-2); max-width: 560px; margin: 0 auto 36px; }
+    .cta-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .badge { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 16px; letter-spacing: .04em; text-transform: uppercase; }
+
+    .feature-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 900px; margin: 0 auto 80px; padding: 0 24px; }
+    .feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 32px 24px; text-align: center; transition: box-shadow .2s, transform .2s; cursor: default; }
+    .feature-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.08); transform: translateY(-3px); }
+    .feature-icon { font-size: 2rem; margin-bottom: 16px; }
+    .feature-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p { font-size: 0.9rem; color: var(--ink-2); }
+
+    .how-it-works { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 64px 24px; text-align: center; }
+    .how-it-works h2 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 48px; }
+    .steps { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 800px; margin: 0 auto; }
+    .step { max-width: 200px; }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+    .step h4 { font-weight: 600; margin-bottom: 6px; }
+    .step p { font-size: 0.88rem; color: var(--ink-2); }
+
+    .testimonials { padding: 64px 24px; max-width: 900px; margin: 0 auto; }
+    .testimonials h2 { font-family: var(--font-display); font-size: 1.8rem; text-align: center; margin-bottom: 36px; }
+    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .testimonial { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .testimonial p { font-size: 0.9rem; color: var(--ink-2); font-style: italic; margin-bottom: 12px; }
+    .testimonial .author { font-size: 0.82rem; font-weight: 600; }
+
+    .cta-footer { background: var(--accent); color: #fff; text-align: center; padding: 64px 24px; }
+    .cta-footer h2 { font-family: var(--font-display); font-size: 1.9rem; margin-bottom: 12px; }
+    .cta-footer p { margin-bottom: 28px; opacity: .85; }
+    .cta-footer .btn-primary { background: #fff; color: var(--accent); }
+    .cta-footer .btn-primary:hover { background: var(--accent-light); }
+
+    .login-note { text-align: center; padding: 20px; font-size: 0.88rem; color: var(--ink-3); }
+    .login-note a { color: var(--accent); text-decoration: underline; cursor: pointer; }
+
+    /* ═══════════════════════════════════════════════
+       SCREEN 2 — ONBOARDING
+    ═══════════════════════════════════════════════ */
+    #onboarding { align-items: center; justify-content: center; background: var(--bg); padding: 40px 24px; }
+    .onboard-card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 48px 40px; max-width: 520px; width: 100%; text-align: center; }
+    .progress-bar { display: flex; gap: 6px; justify-content: center; margin-bottom: 10px; }
+    .prog-dot { height: 5px; flex: 1; max-width: 60px; border-radius: 4px; background: var(--border); transition: background .3s; }
+    .prog-dot.done { background: var(--accent); }
+    .prog-label { font-size: 0.78rem; color: var(--ink-3); margin-bottom: 28px; }
+    .onboard-card h2 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; margin-bottom: 10px; }
+    .onboard-card .sub { font-size: 0.95rem; color: var(--ink-2); margin-bottom: 28px; }
+
+    .check-list { text-align: left; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; }
+    .check-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 0.95rem; }
+    .check-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+    .check-item .icon { color: var(--accent); font-size: 1.1rem; }
+
+    .exercise-list { text-align: left; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 32px; overflow: hidden; }
+    .ex-item { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .ex-item:last-child { border-bottom: none; }
+    .ex-icon { font-size: 1.2rem; width: 28px; text-align: center; }
+
+    .level-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; text-align: left; }
+    .level-btn { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px; cursor: pointer; transition: border-color .2s, background .2s; }
+    .level-btn:hover, .level-btn.selected { border-color: var(--accent); background: var(--accent-light); }
+    .level-btn .lv { font-weight: 700; font-size: 0.95rem; }
+    .level-btn .lv-desc { font-size: 0.82rem; color: var(--ink-2); margin-top: 2px; }
+
+    .goal-options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; text-align: left; }
+    .goal-btn { background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 18px; cursor: pointer; font-size: 0.95rem; transition: border-color .2s, background .2s; display: flex; align-items: center; gap: 10px; }
+    .goal-btn:hover, .goal-btn.selected { border-color: var(--accent); background: var(--accent-light); }
+
+    .onboard-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .onboard-nav button:first-child { background: none; border: none; color: var(--ink-3); font-size: 0.88rem; cursor: pointer; }
+    .onboard-nav button:first-child:hover { color: var(--ink); }
+
+    /* ═══════════════════════════════════════════════
+       SCREEN 3 — ASSESSMENT
+    ═══════════════════════════════════════════════ */
+    #assessment { background: var(--surface); }
+    .assessment-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid var(--border); }
+    .assessment-header .center-label { font-weight: 600; font-size: 0.95rem; }
+    .exit-btn { background: none; border: none; color: var(--ink-2); font-size: 0.9rem; cursor: pointer; }
+    .exit-btn:hover { color: var(--ink); }
+    .q-wrap { max-width: 680px; margin: 48px auto; padding: 0 24px; }
+    .q-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; }
+    .q-adapting { font-size: 0.82rem; color: var(--ink-3); margin-left: 12px; }
+    .q-timer { float: right; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; }
+    .q-meta { display: flex; align-items: center; margin-bottom: 20px; overflow: hidden; }
+    .question-text { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; line-height: 1.3; margin-bottom: 14px; }
+    .q-hint { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; color: #92400e; margin-bottom: 32px; display: flex; gap: 8px; align-items: flex-start; }
+    .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
+    .opt { display: flex; align-items: center; gap: 14px; border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px 20px; cursor: pointer; transition: border-color .15s, background .15s; }
+    .opt:hover { border-color: var(--accent); background: var(--accent-light); }
+    .opt.selected { border-color: var(--accent); background: var(--accent-light); }
+    .opt .key { width: 28px; height: 28px; border: 1.5px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
+    .opt.selected .key { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .opt .opt-text { font-size: 0.95rem; }
+    .q-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 20px; }
+    .keyboard-hint { font-size: 0.82rem; color: var(--ink-3); display: flex; align-items: center; gap: 6px; }
+    .key-badge { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 8px; font-family: monospace; font-size: 0.78rem; }
+    .q-confirm-note { font-size: 0.8rem; color: var(--ink-3); text-align: center; margin-top: 8px; }
+
+    /* ═══════════════════════════════════════════════
+       SCREEN 4 — DASHBOARD
+    ═══════════════════════════════════════════════ */
+    #dashboard { flex-direction: column; }
+    .db-layout { display: grid; grid-template-columns: 220px 1fr 280px; gap: 0; flex: 1; }
+    .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 28px 20px; display: flex; flex-direction: column; gap: 28px; }
+    .stat-block h4 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); margin-bottom: 10px; }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; margin-bottom: 6px; font-size: 0.88rem; }
+    .stat-val { font-weight: 700; color: var(--accent); font-size: 0.85rem; }
+    .recent-list { list-style: none; }
+    .recent-list li { font-size: 0.85rem; color: var(--ink-2); padding: 5px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: color .2s; }
+    .recent-list li:hover { color: var(--accent); }
+    .sign-out { margin-top: auto; background: none; border: none; color: var(--ink-3); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 8px 0; }
+    .sign-out:hover { color: var(--ink); }
+
+    .db-main { padding: 32px; overflow-y: auto; }
+    .greeting-bar { margin-bottom: 24px; }
+    .greeting-bar h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; }
+    .greeting-bar p { font-size: 0.9rem; color: var(--ink-2); }
+    .overall-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; font-size: 0.85rem; }
+    .prog-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--accent); border-radius: 4px; }
+
+    .cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .info-card .card-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .info-card .big-val { font-family: var(--font-display); font-size: 2rem; font-weight: 700; }
+    .info-card .card-sub { font-size: 0.82rem; color: var(--ink-2); margin-top: 4px; }
+    .streak-days { display: flex; gap: 5px; margin-top: 10px; }
+    .day-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: var(--ink-3); }
+    .day-dot.done { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .queue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .queue-header h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; }
+    .queue-header a { font-size: 0.85rem; color: var(--accent); cursor: pointer; }
+    .lesson-item { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; transition: box-shadow .2s, transform .1s; cursor: pointer; }
+    .lesson-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,.07); transform: translateX(2px); }
+    .lesson-thumb { width: 48px; height: 48px; background: var(--accent-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .lesson-info { flex: 1; }
+    .lesson-info .l-title { font-weight: 600; font-size: 0.92rem; }
+    .lesson-info .l-time { font-size: 0.8rem; color: var(--ink-3); }
+    .lesson-action { font-size: 1.2rem; color: var(--accent); }
+    .lesson-item.locked .lesson-action { color: var(--ink-3); }
+    .lesson-item.locked { opacity: .7; }
+
+    .db-aside { background: var(--surface); border-left: 1px solid var(--border); padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; }
+    .recommended-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+    .rec-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-bottom: 8px; }
+    .rec-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; line-height: 1.3; }
+    .rec-meta { font-size: 0.8rem; color: var(--ink-3); margin-bottom: 14px; }
+    .settings-card h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); margin-bottom: 14px; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { color: var(--ink-2); font-size: 0.82rem; }
+    .size-btns { display: flex; gap: 4px; }
+    .size-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 3px 9px; font-size: 0.75rem; cursor: pointer; transition: background .15s; }
+    .size-btn:hover, .size-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .speed-btns { display: flex; gap: 4px; }
+    .speed-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 5px; padding: 3px 8px; font-size: 0.75rem; cursor: pointer; transition: background .15s; }
+    .speed-btn:hover, .speed-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .toggle { width: 36px; height: 20px; border-radius: 10px; background: var(--border); position: relative; cursor: pointer; transition: background .2s; }
+    .toggle.on { background: var(--accent); }
+    .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: left .2s; }
+    .toggle.on::after { left: 18px; }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer { background: var(--ink); color: #aaa; padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; }
+    footer strong { color: #fff; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: #aaa; cursor: pointer; }
+    .footer-links a:hover { color: #fff; }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 768px) {
+      .feature-cards { grid-template-columns: 1fr; }
+      .testimonial-grid { grid-template-columns: 1fr; }
+      .level-options { grid-template-columns: 1fr; }
+      .db-layout { grid-template-columns: 1fr; }
+      .sidebar, .db-aside { display: none; }
+      .cards-row { grid-template-columns: 1fr; }
+      nav { padding: 12px 16px; }
+      .nav-links { display: none; }
+    }
+  </style>
 </head>
-
 <body>
-    <main>
-        <!-- nav con las partes de la misma pagina -->
-        <nav>
-            Información Personal
-            Experiencia
-            Portafolio
-        </nav>
-        <header id="contactos">
-            <ul>
-                <li>Correo: andreina@example.com</li>
-                <li>Github: github.com/Andreina</li>
-            </ul>
-        </header>
-        <section id="info-personal">
-            Información Personal
-            <h1>Andreina Pallo Reyes</h1>
-            <img src="img\image.png" alt="imagen de gestor de tareas">
-            <img src="" alt="" sizes="" srcset="">
-            <h3>Quito, Ecuador </h3>
-            <h3>Educación: Escuela Politécnica Nacional</h3>
 
-        </section>
-        <section id="experiencia">
-            Experiencia:
-            <ul>
-                <b>Cursos:</b>
-                <li>Introducción a Algoritmos y Estructuras de Datos</li>
-                <li>Desarrollo Web con Frameworks</li>
-                <li>Introducción a Algoritmos y Estructuras de Datos</li>
-                <b>Certificación:</b>
-                <li>Inglés: Intermedio B1</li>
-            </ul>
-        </section>
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 1 — LANDING
+═══════════════════════════════════════════════════ -->
+<section id="landing" class="screen active">
+  <nav>
+    <div class="logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      FluentPath
+    </div>
+    <div class="nav-links">
+      <span>Features</span>
+      <span>Pricing</span>
+      <span>About</span>
+    </div>
+    <button class="btn-login" onclick="goTo('onboarding', 1)">Log In</button>
+  </nav>
 
-        <article class="portafolio">
-            <h1>Portafolio</h1>
-            <article>
-                <h2>Gestor de tareas</h2>
-                <img src="img\image.png" alt="imagen de gestor de tareas">
-                <p>Proyecto grupal de aplicación de escritorio desarrollada con Python y PostgreSQL. Contribuí en la
-                    lógica de negocio, implementando el flujo para agregar y mostrar tareas conectadas a la base de
-                    datos.</p>
-            </article>
-            <article>
-                <h2>Portafolio 2</h2>
-                <img src="img\image.png" alt="imagen de gestor de tareas">
-                <p>Proyecto grupal de aplicación de escritorio desarrollada con Python y PostgreSQL. Contribuí en la
-                    lógica de negocio, implementando el flujo para agregar y mostrar tareas conectadas a la base de
-                    datos.</p>
-            </article>
-        </article>
+  <!-- Hero -->
+  <div class="hero">
+    <span class="badge">🌍 Now in Beta — Free Access</span>
+    <h1>Learn English —<br/>short, simple, accessible.</h1>
+    <p>Practical micro-lessons and a quick adaptive placement get you practicing from day one. Bite-sized learning that fits your schedule.</p>
+    <div class="cta-group">
+      <button class="btn-primary" onclick="goTo('onboarding', 1)">Get Started — It's Free</button>
+      <button class="btn-secondary" onclick="goTo('assessment')">Try a Quick Assessment</button>
+    </div>
+  </div>
+
+  <!-- Feature cards -->
+  <div class="feature-cards">
+    <div class="feature-card">
+      <div class="feature-icon">⏱️</div>
+      <h3>Evaluate your level in 5 min</h3>
+      <p>Quick adaptive test to find your perfect starting point.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🕐</div>
+      <h3>3-minute lessons that fit your day</h3>
+      <p>Bite-sized content designed for busy schedules and quick progress.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>See your progress from day one</h3>
+      <p>Visual tracking and milestones to keep you motivated and on track.</p>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-it-works">
+    <h2>How FluentPath works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Set your goal</h4>
+        <p>Tell us why you're learning and we'll tailor your path.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Quick placement</h4>
+        <p>A 5-min adaptive test puts you at the right level instantly.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Daily micro-lessons</h4>
+        <p>3–8 minute sessions keep you progressing without burnout.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Track & improve</h4>
+        <p>Detailed stats show exactly where you're growing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <div class="testimonials">
+    <h2>Learners love FluentPath</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial">
+        <p>"I tried three apps before FluentPath. This is the first one I actually stick with — lessons are short enough that I have no excuse."</p>
+        <span class="author">— María R., Quito</span>
+      </div>
+      <div class="testimonial">
+        <p>"The adaptive placement was spot on. It didn't put me in beginner lessons I already knew. I started right where I needed to."</p>
+        <span class="author">— Carlos T., Lima</span>
+      </div>
+      <div class="testimonial">
+        <p>"Seeing my streak and progress chart every day genuinely motivates me. Simple but effective."</p>
+        <span class="author">— Andrés M., Bogotá</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA footer -->
+  <div class="cta-footer">
+    <h2>Start speaking English today.</h2>
+    <p>No credit card required. Free forever for core features.</p>
+    <button class="btn-primary" onclick="goTo('onboarding', 1)">Create Free Account</button>
+  </div>
+
+  <div class="login-note">
+    Already have an account? <a onclick="goTo('dashboard')">Sign In</a>
+  </div>
+
+  <footer>
+    <strong>FluentPath</strong>
+    <div class="footer-links">
+      <a>Privacy</a>
+      <a>Terms</a>
+      <a>Contact</a>
+      <a>Accessibility</a>
+    </div>
+  </footer>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 2 — ONBOARDING (multi-step)
+═══════════════════════════════════════════════════ -->
+<section id="onboarding" class="screen">
+  <nav>
+    <div class="logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      FluentPath
+    </div>
+    <div></div>
+    <button class="btn-ghost" onclick="goTo('dashboard')">Skip tour ✕</button>
+  </nav>
+
+  <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:40px 24px;">
+    <div class="onboard-card">
+
+      <!-- Step 1 -->
+      <div id="step-1">
+        <div class="progress-bar">
+          <div class="prog-dot done" id="p1"></div>
+          <div class="prog-dot" id="p2"></div>
+          <div class="prog-dot" id="p3"></div>
+          <div class="prog-dot" id="p4"></div>
+          <div class="prog-dot" id="p5"></div>
+        </div>
+        <div class="prog-label">1 / 5</div>
+        <h2>Welcome to FluentPath</h2>
+        <p class="sub">Practical micro-lessons to start speaking today.</p>
+        <div class="check-list">
+          <div class="check-item"><span class="icon">✅</span> Quick 3–8 minute lessons</div>
+          <div class="check-item"><span class="icon">✅</span> Adaptive to your level</div>
+          <div class="check-item"><span class="icon">✅</span> Practical micro-lessons to start speaking today</div>
+        </div>
+        <div class="onboard-nav">
+          <button onclick="goTo('landing')">← Back to home</button>
+          <button class="btn-primary" onclick="nextStep(2)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="step-2" style="display:none;">
+        <div class="progress-bar">
+          <div class="prog-dot done"></div><div class="prog-dot done"></div>
+          <div class="prog-dot"></div><div class="prog-dot"></div><div class="prog-dot"></div>
+        </div>
+        <div class="prog-label">2 / 5</div>
+        <h2>Types of exercises</h2>
+        <p class="sub">Practice with varied activities designed for rapid retention.</p>
+        <div class="exercise-list">
+          <div class="ex-item"><span class="ex-icon">🎧</span> Listening & repeat (audio)</div>
+          <div class="ex-item"><span class="ex-icon">🔤</span> Translate & type</div>
+          <div class="ex-item"><span class="ex-icon">📋</span> Multiple-choice & drag words</div>
+          <div class="ex-item"><span class="ex-icon">📅</span> Micro-lessons for daily practice</div>
+        </div>
+        <div class="onboard-nav">
+          <button onclick="nextStep(1)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(3)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div id="step-3" style="display:none;">
+        <div class="progress-bar">
+          <div class="prog-dot done"></div><div class="prog-dot done"></div><div class="prog-dot done"></div>
+          <div class="prog-dot"></div><div class="prog-dot"></div>
+        </div>
+        <div class="prog-label">3 / 5</div>
+        <h2>What's your current level?</h2>
+        <p class="sub">We'll start you in the right place.</p>
+        <div class="level-options">
+          <button class="level-btn" onclick="selectLevel(this)"><div class="lv">🌱 Beginner</div><div class="lv-desc">Little to no English</div></button>
+          <button class="level-btn" onclick="selectLevel(this)"><div class="lv">🔵 Elementary</div><div class="lv-desc">Basic phrases & vocab</div></button>
+          <button class="level-btn" onclick="selectLevel(this)"><div class="lv">🟡 Intermediate</div><div class="lv-desc">Can hold conversations</div></button>
+          <button class="level-btn" onclick="selectLevel(this)"><div class="lv">🔴 Advanced</div><div class="lv-desc">Near-fluent speaker</div></button>
+        </div>
+        <div class="onboard-nav">
+          <button onclick="nextStep(2)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(4)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div id="step-4" style="display:none;">
+        <div class="progress-bar">
+          <div class="prog-dot done"></div><div class="prog-dot done"></div><div class="prog-dot done"></div><div class="prog-dot done"></div>
+          <div class="prog-dot"></div>
+        </div>
+        <div class="prog-label">4 / 5</div>
+        <h2>Why are you learning English?</h2>
+        <p class="sub">We'll personalize your content around your goal.</p>
+        <div class="goal-options">
+          <button class="goal-btn" onclick="selectGoal(this)">💼 Work & career opportunities</button>
+          <button class="goal-btn" onclick="selectGoal(this)">✈️ Travel & live abroad</button>
+          <button class="goal-btn" onclick="selectGoal(this)">🎓 Academic / university purposes</button>
+          <button class="goal-btn" onclick="selectGoal(this)">💬 Talk with friends & family</button>
+          <button class="goal-btn" onclick="selectGoal(this)">🎬 Enjoy media & culture in English</button>
+        </div>
+        <div class="onboard-nav">
+          <button onclick="nextStep(3)">← Back</button>
+          <button class="btn-primary" onclick="nextStep(5)">Next →</button>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div id="step-5" style="display:none;">
+        <div class="progress-bar">
+          <div class="prog-dot done"></div><div class="prog-dot done"></div><div class="prog-dot done"></div><div class="prog-dot done"></div><div class="prog-dot done"></div>
+        </div>
+        <div class="prog-label">5 / 5</div>
+        <h2>Ready to start?</h2>
+        <p class="sub">Take a 5-minute assessment or jump straight into your first lesson.</p>
+        <div class="check-list">
+          <div class="check-item"><span class="icon">✅</span> Assessment tailors your path to your current skill level</div>
+          <div class="check-item"><span class="icon">✅</span> Start a lesson in under 3 minutes for daily micro-learning</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin: 24px 0;">
+          <button class="btn-primary" onclick="goTo('dashboard')">Get Started</button>
+          <button class="btn-secondary" onclick="goTo('assessment')">Take quick assessment</button>
+        </div>
+        <div class="onboard-nav">
+          <button onclick="nextStep(4)">← Back</button>
+          <button class="btn-ghost" onclick="goTo('landing')">Repeat Tour</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 3 — LEVEL ASSESSMENT
+═══════════════════════════════════════════════════ -->
+<section id="assessment" class="screen">
+  <div class="assessment-header">
+    <div class="logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      FluentPath
+    </div>
+    <span class="center-label">Level Assessment</span>
+    <button class="exit-btn" onclick="goTo('landing')">✕ Exit test</button>
+  </div>
+
+  <div class="q-wrap">
+    <div class="q-meta">
+      <span class="q-tag">📝 Grammar &amp; Usage</span>
+      <span class="q-adapting">Adapting to your level…</span>
+      <span class="q-timer">⏱ 12:45</span>
+    </div>
+
+    <div class="question-text">
+      If I ______ known about the meeting earlier, I would have adjusted my schedule accordingly.
+    </div>
+    <div class="q-hint">ℹ️ Think about the structure of the third conditional for past hypothetical situations.</div>
+
+    <div class="options-list">
+      <div class="opt" onclick="selectOpt(this)"><span class="key">A</span><span class="opt-text">have</span></div>
+      <div class="opt" onclick="selectOpt(this)"><span class="key">B</span><span class="opt-text">had</span></div>
+      <div class="opt" onclick="selectOpt(this)"><span class="key">C</span><span class="opt-text">would have</span></div>
+      <div class="opt" onclick="selectOpt(this)"><span class="key">D</span><span class="opt-text">did</span></div>
+    </div>
+
+    <div class="q-footer">
+      <div class="keyboard-hint">
+        Use keyboard:
+        <span class="key-badge">A</span><span class="key-badge">B</span>
+        <span class="key-badge">C</span><span class="key-badge">D</span>
+        | <span class="key-badge">Enter</span> to confirm
+      </div>
+      <button class="btn-primary" onclick="goTo('dashboard')">Continue Test →</button>
+    </div>
+    <p class="q-confirm-note">Select an option to continue</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 4 — DASHBOARD
+═══════════════════════════════════════════════════ -->
+<section id="dashboard" class="screen">
+  <nav>
+    <div class="logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      FluentPath
+    </div>
+    <div class="nav-links">
+      <span class="active-link">Dashboard</span>
+      <span>Lessons</span>
+      <span>Progress</span>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <button style="background:none;border:none;font-size:1.1rem;cursor:pointer;" title="Help">❓</button>
+      <button style="background:none;border:none;font-size:1.1rem;cursor:pointer;" title="Settings">⚙️</button>
+      <div style="width:34px;height:34px;border-radius:50%;background:var(--accent-light);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:.85rem;cursor:pointer;">A</div>
+    </div>
+  </nav>
+
+  <!-- Overall progress bar -->
+  <div style="padding: 0 32px; background: var(--surface); border-bottom: 1px solid var(--border);">
+    <div class="overall-bar">
+      <span style="font-weight:600;">Overall course progress: 42% complete across all levels</span>
+      <div class="prog-track"><div class="prog-fill" style="width:42%"></div></div>
+    </div>
+  </div>
+
+  <div class="db-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="stat-block">
+        <h4>Quick Stats</h4>
+        <div class="stat-row">Daily Goal <span class="stat-val">75%</span></div>
+        <div class="stat-row">Current Streak <span class="stat-val">5 Days</span></div>
+      </div>
+      <div class="stat-block">
+        <h4>Recent Lessons</h4>
+        <ul class="recent-list">
+          <li>1.1 Intro to Greetings</li>
+          <li>1.2 Basics Verbs</li>
+        </ul>
+      </div>
+      <button class="sign-out" onclick="goTo('landing')">↩ Sign Out</button>
+    </aside>
+
+    <!-- Main -->
+    <main class="db-main">
+      <div class="greeting-bar">
+        <h2>Good morning, Alex! 👋</h2>
+        <p>You're on a 5-day streak. Keep it going to earn your next badge.</p>
+      </div>
+
+      <div class="cards-row">
+        <div class="info-card">
+          <div class="card-label">⚡ Current Standing</div>
+          <div class="big-val">Level 7</div>
+          <div class="card-sub">Conversational — 3,420 / 4,000 XP</div>
+          <div style="margin-top:12px;">
+            <div class="prog-track"><div class="prog-fill" style="width:85%"></div></div>
+            <div style="font-size:.75rem;color:var(--ink-3);margin-top:4px;">85% to Level 8</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="card-label">🔥 Consistency</div>
+          <div class="big-val">5 Days</div>
+          <div class="card-sub">Reach 7 days to unlock a 2x XP boost!</div>
+          <div class="streak-days">
+            <div class="day-dot done">M</div><div class="day-dot done">T</div>
+            <div class="day-dot done">W</div><div class="day-dot done">T</div>
+            <div class="day-dot done">F</div><div class="day-dot">S</div><div class="day-dot">S</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="queue-header">
+        <h3>Lesson Queue</h3>
+        <a>View All →</a>
+      </div>
+      <p style="font-size:.85rem;color:var(--ink-2);margin-bottom:16px;">Pick up right where you left off in your learning path.</p>
+
+      <div class="lesson-item" onclick="goTo('assessment')">
+        <div class="lesson-thumb">☕</div>
+        <div class="lesson-info"><div class="l-title">Practice: Ordering at a Café</div><div class="l-time">3 min</div></div>
+        <div class="lesson-action">▶</div>
+      </div>
+      <div class="lesson-item" onclick="goTo('assessment')">
+        <div class="lesson-thumb">👥</div>
+        <div class="lesson-info"><div class="l-title">Dialog: Meeting New People</div><div class="l-time">5 min</div></div>
+        <div class="lesson-action">▶</div>
+      </div>
+      <div class="lesson-item locked">
+        <div class="lesson-thumb">🃏</div>
+        <div class="lesson-info"><div class="l-title">Flashcards: Common Verbs</div><div class="l-time">4 min</div></div>
+        <div class="lesson-action">🔒</div>
+      </div>
+      <div class="lesson-item locked">
+        <div class="lesson-thumb">🗺️</div>
+        <div class="lesson-info"><div class="l-title">Micro-lesson: Asking Directions</div><div class="l-time">4 min</div></div>
+        <div class="lesson-action">🔒</div>
+      </div>
+      <div class="lesson-item locked">
+        <div class="lesson-thumb">🚌</div>
+        <div class="lesson-info"><div class="l-title">Listening: Public Transport</div><div class="l-time">4 min</div></div>
+        <div class="lesson-action">🔒</div>
+      </div>
     </main>
-</body>
 
+    <!-- Aside -->
+    <aside class="db-aside">
+      <div class="recommended-card">
+        <div class="rec-tag">⭐ Recommended</div>
+        <div class="rec-title">Ordering Coffee — Phrases &amp; Politeness</div>
+        <div class="rec-meta">⏱ 7 min · Lesson 2.4</div>
+        <button class="btn-primary" style="width:100%;padding:10px;" onclick="goTo('assessment')">Continue Lesson</button>
+      </div>
+
+      <div class="settings-card">
+        <h4>⚙️ Quick Settings</h4>
+        <div class="setting-row">
+          <span>Text Size</span>
+          <div class="size-btns">
+            <button class="size-btn">S</button>
+            <button class="size-btn active">M</button>
+            <button class="size-btn">L</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <span>Playback Speed</span>
+          <div class="speed-btns">
+            <button class="speed-btn">0.75x</button>
+            <button class="speed-btn active">1x</button>
+            <button class="speed-btn">1.25x</button>
+            <button class="speed-btn">1.5x</button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div><span>Captions</span><div class="setting-label">Show subtitles during audio</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><span>High Contrast</span><div class="setting-label">Increase visual separation</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><span>Keyboard Shortcuts</span><div class="setting-label">Full navigation via keys</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-size:.85rem;">
+        <div style="font-weight:700;margin-bottom:6px;">❓ Need help?</div>
+        <div style="color:var(--ink-2);font-size:.82rem;margin-bottom:12px;">Check our Help Center for accessibility guides and platform tutorials.</div>
+        <button class="btn-secondary" style="width:100%;padding:8px;">Open Help Center ↗</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════ -->
+<script>
+  const screens = ['landing','onboarding','assessment','dashboard'];
+
+  function goTo(id, step) {
+    screens.forEach(s => {
+      document.getElementById(s).classList.remove('active');
+    });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+    if (id === 'onboarding' && step) nextStep(step);
+  }
+
+  /* Onboarding steps */
+  function nextStep(n) {
+    for (let i = 1; i <= 5; i++) {
+      const el = document.getElementById('step-' + i);
+      if (el) el.style.display = n === i ? 'block' : 'none';
+    }
+  }
+
+  function selectLevel(btn) {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  function selectGoal(btn) {
+    document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  /* Assessment options */
+  function selectOpt(el) {
+    document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  /* Keyboard shortcuts for assessment */
+  document.addEventListener('keydown', (e) => {
+    const map = { a: 0, b: 1, c: 2, d: 3 };
+    const opts = document.querySelectorAll('.opt');
+    if (map[e.key] !== undefined && opts.length) {
+      opts.forEach(o => o.classList.remove('selected'));
+      opts[map[e.key]].classList.add('selected');
+    }
+    if (e.key === 'Enter') {
+      const selected = document.querySelector('.opt.selected');
+      if (selected) goTo('dashboard');
+    }
+  });
+
+  /* Quick settings toggles */
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.size-btns').querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.speed-btns').querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+
+</body>
 </html>
